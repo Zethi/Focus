@@ -55,6 +55,8 @@ public class Main extends Application {
         program.setX(dimensions.getScreenX());
         program.setY(dimensions.getScreenY());
         program.show();
+        program.toBack();
+        program.setOpacity(0.0);
     }
 
     private void setProgramOnBackground() {
