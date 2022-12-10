@@ -28,7 +28,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws AWTException {
         Group rootGroup = new Group();
         setUpDimensions();
-        setProgramOnBackground(primaryStage);
+        setProgramOnBackground();
         setUpApplication(rootGroup);
 
         Canvas canvas = new Canvas(dimensions.getScreenWidth(), dimensions.getScreenWidth());
@@ -57,9 +57,8 @@ public class Main extends Application {
         program.show();
     }
 
-    private void setProgramOnBackground(Stage primaryStage) {
+    private void setProgramOnBackground() {
         program.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setAlwaysOnTop(true);
     }
 
     private void resizeApplication(double newWidth, double newHeight) {
