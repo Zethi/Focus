@@ -10,14 +10,17 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 
 public class Main extends Application {
     private Dimensions dimensions;
     private final Screen screen = Screen.getPrimary();
     private final Stage program = new Stage();
+    private String actualScreen;
 
 
     public static void main(String[] args) {
@@ -35,12 +38,16 @@ public class Main extends Application {
         VirtualScreen virtualScreen = new VirtualScreen(dimensions, new Robot());
         rootGroup.getChildren().add(canvas);
 
-        int UPDATE_TIME = 1000 / 60;
+        int UPDATE_TIME = 1000 / 30;
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(() -> {
-            dimensions = virtualScreen.updatePropertyToActualScreen();
-            resizeApplication(dimensions.getScreenWidth(), dimensions.getScreenHeight());
-            virtualScreen.setImage(dimensions, canvas.getGraphicsContext2D());
+            if(!actualScreen.equals(MouseInfo.getPointerInfo().getDevice().getIDstring())){
+                actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
+                dimensions = virtualScreen.updatePropertyToActualScreen();
+                resizeApplication(dimensions.getScreenWidth(), dimensions.getScreenHeight());
+            }else{
+                virtualScreen.setImage(dimensions, canvas.getGraphicsContext2D());
+            }
         }, 0, UPDATE_TIME, TimeUnit.MILLISECONDS);
 
     }
@@ -57,6 +64,7 @@ public class Main extends Application {
         program.show();
         program.toBack();
         program.setOpacity(0.0);
+        this.actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
     }
 
     private void setProgramOnBackground() {
@@ -67,5 +75,4 @@ public class Main extends Application {
         program.setHeight(newHeight);
         program.setWidth(newWidth);
     }
-
 }

@@ -14,16 +14,19 @@ public class VirtualScreen {
     private Dimensions dimensions;
     private Screen screen;
     private final Robot robot;
+    private String actualScreen;
 
 
     public VirtualScreen(Dimensions dimensions, Robot robot) {
         this.robot = robot;
         this.dimensions = dimensions;
-
+        this.actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
     }
 
 
     public Dimensions updatePropertyToActualScreen() {
+        if(actualScreen.equals(MouseInfo.getPointerInfo().getDevice().getIDstring())) return this.dimensions;
+        actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
         Screen currentScreen = Screen.getScreensForRectangle(new Rectangle2D(
                 MouseInfo.getPointerInfo().getLocation().getX(),
                 MouseInfo.getPointerInfo().getLocation().getY(),
