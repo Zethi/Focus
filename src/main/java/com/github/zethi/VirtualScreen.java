@@ -31,8 +31,8 @@ public class VirtualScreen {
     public void updateScreen() {
         setScreenID(cursor.getFocusScreenID());
         Screen newScreen = Screen.getScreensForRectangle(new Rectangle2D(
-                cursor.getLocation().getX(),
-                cursor.getLocation().getY(),
+                cursor.getLocation().X(),
+                cursor.getLocation().Y(),
                 1, 1)).get(0);
 
         Dimensions newScreenDimensions = new Dimensions(
@@ -45,8 +45,8 @@ public class VirtualScreen {
     }
 
     public void setImage(GraphicsContext graphicContext) {
-        BufferedImage screenImage = robot.createScreenCapture(new Rectangle((int) dimensions.getScreenX(), (int) dimensions.getScreenY(),
-                (int) dimensions.getScreenWidth(), (int) dimensions.getScreenHeight()));
+        BufferedImage screenImage = robot.createScreenCapture(new Rectangle((int) dimensions.screenX(), (int) dimensions.screenY(),
+                (int) dimensions.screenWidth(), (int) dimensions.screenHeight()));
 
         WritableImage fxImage = new WritableImage(screenImage.getWidth(), screenImage.getHeight());
 

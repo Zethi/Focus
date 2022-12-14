@@ -41,7 +41,7 @@ public class Main extends Application {
                 return;
             }
             virtualScreen.updateScreen();
-            resizeApplication(virtualScreen.getCurrentDimensions().getScreenWidth(), virtualScreen.getCurrentDimensions().getScreenHeight());
+            resizeApplication(virtualScreen.getCurrentDimensions().screenWidth(), virtualScreen.getCurrentDimensions().screenHeight());
         }, 0, UPDATE_TIME, TimeUnit.MILLISECONDS);
     }
 
