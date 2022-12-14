@@ -27,12 +27,19 @@ public class VirtualScreen {
     public void updateScreen() {
         if (!pointerIsOnDifferentScreen()) return;
 
-        pointerFocusScreenID = MouseInfo.getPointerInfo().getDevice().getIDstring();
+        setPointerFocusScreenID(MouseInfo.getPointerInfo().getDevice().getIDstring());
         Screen newScreen = Screen.getScreensForRectangle(new Rectangle2D(
                 MouseInfo.getPointerInfo().getLocation().getX(),
                 MouseInfo.getPointerInfo().getLocation().getY(),
                 1, 1)).get(0);
-        this.dimensions = new Dimensions(newScreen.getBounds().getMinX(), newScreen.getBounds().getMinY(), newScreen.getBounds().getWidth(), newScreen.getBounds().getHeight());
+
+        Dimensions newScreenDimensions = new Dimensions(
+                newScreen.getBounds().getMinX(),
+                newScreen.getBounds().getMinY(),
+                newScreen.getBounds().getWidth(),
+                newScreen.getBounds().getHeight());
+
+        setDimensions(newScreenDimensions);
     }
 
     public void setImage(GraphicsContext graphicContext) {
@@ -53,4 +60,14 @@ public class VirtualScreen {
     public boolean pointerIsOnDifferentScreen() {
         return !pointerFocusScreenID.equals(MouseInfo.getPointerInfo().getDevice().getIDstring());
     }
+
+    public void setDimensions(Dimensions dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public void setPointerFocusScreenID(String pointerFocusScreenID) {
+        this.pointerFocusScreenID = pointerFocusScreenID;
+    }
+
+
 }
