@@ -13,30 +13,30 @@ public class VirtualScreen {
     private Dimensions dimensions;
     private Screen screen;
     private final Robot robot;
-    private String actualScreen;
+    private String pointerFocusScreenID;
 
     public VirtualScreen(Dimensions dimensions, Robot robot) {
         this.robot = robot;
         this.dimensions = dimensions;
-        this.actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
+        this.pointerFocusScreenID = MouseInfo.getPointerInfo().getDevice().getIDstring();
     }
 
-    public Dimensions updatePropertyToActualScreen() {
-        if (actualScreen.equals(MouseInfo.getPointerInfo().getDevice().getIDstring())) return this.dimensions;
-        actualScreen = MouseInfo.getPointerInfo().getDevice().getIDstring();
-        Screen currentScreen = Screen.getScreensForRectangle(new Rectangle2D(
-                MouseInfo.getPointerInfo().getLocation().getX(),
-                MouseInfo.getPointerInfo().getLocation().getY(),
-                1, 1)).get(0);
-        if (currentScreen != screen) {
-            screen = currentScreen;
-            this.dimensions = new Dimensions(screen.getBounds().getMinX(), screen.getBounds().getMinY(), screen.getBounds().getWidth(), screen.getBounds().getHeight());
-        }
-
+    public Dimensions getCurrentDimensions() {
         return this.dimensions;
     }
 
-    public void setImage(Dimensions dimensions, GraphicsContext graphicContext) {
+    public void updateScreen() {
+        if (!pointerIsOnDifferentScreen()) return;
+
+        pointerFocusScreenID = MouseInfo.getPointerInfo().getDevice().getIDstring();
+        this.screen = Screen.getScreensForRectangle(new Rectangle2D(
+                MouseInfo.getPointerInfo().getLocation().getX(),
+                MouseInfo.getPointerInfo().getLocation().getY(),
+                1, 1)).get(0);
+        this.dimensions = new Dimensions(screen.getBounds().getMinX(), screen.getBounds().getMinY(), screen.getBounds().getWidth(), screen.getBounds().getHeight());
+    }
+
+    public void setImage(GraphicsContext graphicContext) {
         BufferedImage screenImage = robot.createScreenCapture(new Rectangle((int) dimensions.getScreenX(), (int) dimensions.getScreenY(),
                 (int) dimensions.getScreenWidth(), (int) dimensions.getScreenHeight()));
 
@@ -49,5 +49,9 @@ public class VirtualScreen {
         }
 
         graphicContext.drawImage(fxImage, 0, 0);
+    }
+
+    public boolean pointerIsOnDifferentScreen() {
+        return !pointerFocusScreenID.equals(MouseInfo.getPointerInfo().getDevice().getIDstring());
     }
 }
