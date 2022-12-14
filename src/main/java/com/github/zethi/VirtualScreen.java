@@ -1,5 +1,6 @@
 package com.github.zethi;
 
+import com.github.zethi.cursor.Cursor;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -12,12 +13,15 @@ public class VirtualScreen {
 
     private Dimensions dimensions;
     private final Robot robot;
-    private String pointerFocusScreenID;
+    private final com.github.zethi.cursor.Cursor cursor;
+    private String screenID;
 
-    public VirtualScreen(Dimensions dimensions, Robot robot) {
+
+    public VirtualScreen(Dimensions dimensions, Robot robot, Cursor cursor) {
         this.robot = robot;
         this.dimensions = dimensions;
-        this.pointerFocusScreenID = MouseInfo.getPointerInfo().getDevice().getIDstring();
+        this.cursor = cursor;
+        this.screenID = cursor.getFocusScreenID();
     }
 
     public Dimensions getCurrentDimensions() {
@@ -25,12 +29,10 @@ public class VirtualScreen {
     }
 
     public void updateScreen() {
-        if (!pointerIsOnDifferentScreen()) return;
-
-        setPointerFocusScreenID(MouseInfo.getPointerInfo().getDevice().getIDstring());
+        setScreenID(cursor.getFocusScreenID());
         Screen newScreen = Screen.getScreensForRectangle(new Rectangle2D(
-                MouseInfo.getPointerInfo().getLocation().getX(),
-                MouseInfo.getPointerInfo().getLocation().getY(),
+                cursor.getLocation().getX(),
+                cursor.getLocation().getY(),
                 1, 1)).get(0);
 
         Dimensions newScreenDimensions = new Dimensions(
@@ -57,16 +59,16 @@ public class VirtualScreen {
         graphicContext.drawImage(fxImage, 0, 0);
     }
 
-    public boolean pointerIsOnDifferentScreen() {
-        return !pointerFocusScreenID.equals(MouseInfo.getPointerInfo().getDevice().getIDstring());
+    public boolean haveToUpdateScreen() {
+        return !cursor.getFocusScreenID().equals(screenID);
     }
 
     public void setDimensions(Dimensions dimensions) {
         this.dimensions = dimensions;
     }
 
-    public void setPointerFocusScreenID(String pointerFocusScreenID) {
-        this.pointerFocusScreenID = pointerFocusScreenID;
+    public void setScreenID(String pointerFocusScreenID) {
+        this.screenID = pointerFocusScreenID;
     }
 
 

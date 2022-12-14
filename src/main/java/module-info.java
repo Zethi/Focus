@@ -7,4 +7,6 @@ module com.github.zethi {
 
     opens com.github.zethi to javafx.fxml;
     exports com.github.zethi;
+    exports com.github.zethi.cursor;
+    opens com.github.zethi.cursor to javafx.fxml;
 }
