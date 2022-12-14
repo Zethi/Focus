@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 public class VirtualScreen {
 
     private Dimensions dimensions;
-    private Screen screen;
     private final Robot robot;
     private String pointerFocusScreenID;
 
@@ -29,11 +28,11 @@ public class VirtualScreen {
         if (!pointerIsOnDifferentScreen()) return;
 
         pointerFocusScreenID = MouseInfo.getPointerInfo().getDevice().getIDstring();
-        this.screen = Screen.getScreensForRectangle(new Rectangle2D(
+        Screen newScreen = Screen.getScreensForRectangle(new Rectangle2D(
                 MouseInfo.getPointerInfo().getLocation().getX(),
                 MouseInfo.getPointerInfo().getLocation().getY(),
                 1, 1)).get(0);
-        this.dimensions = new Dimensions(screen.getBounds().getMinX(), screen.getBounds().getMinY(), screen.getBounds().getWidth(), screen.getBounds().getHeight());
+        this.dimensions = new Dimensions(newScreen.getBounds().getMinX(), newScreen.getBounds().getMinY(), newScreen.getBounds().getWidth(), newScreen.getBounds().getHeight());
     }
 
     public void setImage(GraphicsContext graphicContext) {
