@@ -1,13 +1,17 @@
 package com.github.zethi;
 
 import com.github.zethi.cursor.Cursor;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 import javafx.stage.Screen;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class VirtualScreen {
 
@@ -50,13 +54,8 @@ public class VirtualScreen {
 
         WritableImage fxImage = new WritableImage(screenImage.getWidth(), screenImage.getHeight());
 
-        for (int x = 0; x < screenImage.getWidth(); x++) {
-            for (int y = 0; y < screenImage.getHeight(); y++) {
-                fxImage.getPixelWriter().setArgb(x, y, screenImage.getRGB(x, y));
-            }
-        }
 
-        graphicContext.drawImage(fxImage, 0, 0);
+        graphicContext.drawImage(SwingFXUtils.toFXImage(screenImage, fxImage), 0, 0);
     }
 
     public boolean haveToUpdateScreen() {
